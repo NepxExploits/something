@@ -2221,6 +2221,47 @@ run(function()
 	})
 	AutoLeaveStaff2.Object.Visible = false
 end)
+run(function()
+    local Disabler = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+        Name = "InfiniteJump",
+        Function = function(callback)
+            if callback then
+                local userInputService = game:GetService("UserInputService")
+                local players = game:GetService("Players")
+                local jumpEnabled = true
+                local jumpRequestConnection
+                local inputBeganConnection
+                local inputEndedConnection
+
+                local player = players.LocalPlayer
+
+                jumpRequestConnection = userInputService.JumpRequest:Connect(function()
+                    if jumpEnabled and player.Character then
+                        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                        if humanoid then
+                            humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                        end
+                    end
+                end)
+
+                inputBeganConnection = userInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+                    if not gameProcessedEvent and input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Space then
+                        jumpEnabled = true
+                    end
+                end)
+
+                inputEndedConnection = userInputService.InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Space then
+                        jumpEnabled = false
+                    end
+                end)
+            else
+                -- Handle disconnection logic here when callback is false, if needed
+            end
+        end,
+        HoverText = "Toggle infinite jump on or off"
+    })
+end)																				
 
 run(function()
 	local oldclickhold
