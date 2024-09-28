@@ -1948,6 +1948,38 @@ run(function()
 		HoverText = "Remove the CPS cap"
 	})
 end)
+								
+run(function()
+	local Disabler = {Enabled = false}
+	Disabler = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+		Name = "SexiVisual",
+		Function = function(callback)
+			if callback then
+				local ground = workspace:FindFirstChild("Ground")
+				if ground and ground:IsA("BasePart") then
+					ground.Material = Enum.Material.SmoothPlastic
+					ground.Reflectance = 0.3
+					ground.Transparency = 0.1
+
+					local lighting = game:GetService("Lighting")
+					lighting.Brightness = 2
+					lighting.EnvironmentSpecularScale = 1
+
+					local surfaceAppearance = Instance.new("SurfaceAppearance")
+					surfaceAppearance.ColorMap = "rbxassetid://YourTextureAssetID"
+					surfaceAppearance.Parent = ground
+				end
+			else
+				local ground = workspace:FindFirstChild("Ground")
+				if ground and ground:IsA("BasePart") then
+					ground.Material = Enum.Material.Grass
+					ground.Reflectance = 0
+					ground.Transparency = 0
+				end
+			end
+		end
+	})
+end)
 
 run(function()
 	local ReachValue = {Value = 14}
