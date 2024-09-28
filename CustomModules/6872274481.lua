@@ -1982,6 +1982,69 @@ run(function()
 end)
 
 run(function()
+	local Disabler = {Enabled = false}
+	Disabler = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+		Name = "SexiVisual",
+		Function = function(callback)
+			if callback then
+				-- Find the ground
+				local ground = workspace:FindFirstChild("Ground")
+				if ground and ground:IsA("BasePart") then
+					-- Change ground properties for wet look
+					ground.Material = Enum.Material.SmoothPlastic
+					ground.Reflectance = 0.3
+					ground.Transparency = 0.1
+
+					-- Adjust lighting
+					local lighting = game:GetService("Lighting")
+					lighting.Brightness = 2
+					lighting.EnvironmentSpecularScale = 1
+
+					-- Add surface appearance for texture
+					local surfaceAppearance = Instance.new("SurfaceAppearance")
+					surfaceAppearance.ColorMap = "rbxassetid://YourTextureAssetID"
+					surfaceAppearance.Parent = ground
+				end
+				
+				-- Create rain effect using ParticleEmitter
+				local rainPart = Instance.new("Part")
+				rainPart.Size = Vector3.new(100, 1, 100)
+				rainPart.Anchored = true
+				rainPart.CanCollide = false
+				rainPart.Position = Vector3.new(0, 50, 0) -- Set above the map for rain to fall down
+				rainPart.Parent = workspace
+
+				local rainEmitter = Instance.new("ParticleEmitter")
+				rainEmitter.Parent = rainPart
+				rainEmitter.Texture = "rbxassetid://241837157" -- You can replace this with your rain particle texture
+				rainEmitter.Rate = 1000
+				rainEmitter.Lifetime = NumberRange.new(2, 3)
+				rainEmitter.Speed = NumberRange.new(30, 50)
+				rainEmitter.Size = NumberSequence.new(0.1) -- Small raindrops
+				rainEmitter.Transparency = NumberSequence.new(0.5) -- Slightly transparent raindrops
+				rainEmitter.Acceleration = Vector3.new(0, -100, 0) -- Make particles fall downwards
+				rainEmitter.VelocitySpread = 180
+
+			else
+				-- Reset ground visuals and remove rain
+				local ground = workspace:FindFirstChild("Ground")
+				if ground and ground:IsA("BasePart") then
+					ground.Material = Enum.Material.Grass
+					ground.Reflectance = 0
+					ground.Transparency = 0
+				end
+				
+				-- Remove the rain part and particle emitter
+				local rainPart = workspace:FindFirstChild("RainPart")
+				if rainPart then
+					rainPart:Destroy()
+				end
+			end
+		end
+	})
+end)
+									
+run(function()
 	local ReachValue = {Value = 14}
 
 	Reach = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
